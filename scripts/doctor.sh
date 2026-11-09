@@ -30,7 +30,7 @@ c_platform(){ [ -d "$ANDROID_HOME/platforms/android-$ANDROID_API" ] && echo "and
 c_bt()      { [ -d "$ANDROID_HOME/build-tools/$ANDROID_BUILD_TOOLS" ] && echo "$ANDROID_BUILD_TOOLS"; }
 c_repo()    { grep -q 'nexus-playground.pleos.ai/repository/raw-releases/connect-avd' "$(android_user_home)/repositories.cfg" && echo "$(android_user_home)/repositories.cfg"; }
 c_sysimg()  { local d; d="$ANDROID_HOME/$(pleos_sysimg_pkg | tr ';' '/')"; [ -d "$d" ] && pleos_sysimg_pkg; }
-c_avd()     { [ -d "$(android_user_home)/avd/${AVD_NAME}.avd" ] && echo "$AVD_NAME"; }
+c_avd()     { local c="$(android_user_home)/avd/${AVD_NAME}.avd/config.ini"; [ -f "$c" ] && grep -qx "hw.device.name=${AVD_DEVICE_ID}" "$c" && echo "$AVD_NAME ($(sed -n 's/^hw\.lcd\.width=//p' "$c")x$(sed -n 's/^hw\.lcd\.height=//p' "$c"))"; }
 c_maven()   { curl -fsS -o /dev/null -w '%{http_code}' "${PLEOS_MAVEN_URL}ai/pleos/playground/Vehicle/${PLEOS_VEHICLE_SDK_VERSION}/Vehicle-${PLEOS_VEHICLE_SDK_VERSION}.pom"; }
 c_profile() { grep -q '>>> pleos-connect-environment >>>' "$(shell_profile)" && shell_profile; }
 

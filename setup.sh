@@ -266,15 +266,24 @@ if [ ! -d "$SYSIMG_DIR" ]; then
 else
   create=1
   if [ -d "$AVD_DIR" ]; then
-    if ask_yn "AVD '${AVD_NAME}' 가 이미 있습니다. 다시 만들까요? (기존 데이터 삭제)" N; then
+    cur_dev="$(sed -n 's/^hw\.device\.name=//p' "$AVD_DIR/config.ini" 2>/dev/null)"
+    if [ "$cur_dev" != "$AVD_DEVICE_ID" ]; then
+      # 예전 setup.sh 는 기기 프로필 없이 만들어 320x640 세로 화면이 되는 문제가 있었음
+      warn "기존 AVD 가 Pleos 기기 프로필(${AVD_DEVICE_ID}, 2560x1440)로 만들어지지 않았습니다 (현재: ${cur_dev:-없음})."
+      ask_default=Y
+    else
+      ask_default=N
+    fi
+    if ask_yn "AVD '${AVD_NAME}' 가 이미 있습니다. 다시 만들까요? (기존 데이터 삭제, 실행 중이면 먼저 종료하세요)" "$ask_default"; then
       "$AVDM" delete avd -n "$AVD_NAME" || true
     else
       create=0; ok "기존 AVD 유지"
     fi
   fi
   if [ "$create" = "1" ]; then
-    echo "no" | "$AVDM" create avd -n "$AVD_NAME" -k "$SYSIMG_PKG"
-    ok "AVD 생성 완료"
+    # -d: Pleos 이미지의 devices.xml 에 정의된 기기 (2560x1440, 160dpi, 12.8", 가로)
+    echo "no" | "$AVDM" create avd -n "$AVD_NAME" -k "$SYSIMG_PKG" -d "$AVD_DEVICE_ID"
+    ok "AVD 생성 완료 (기기: ${AVD_DEVICE_ID})"
   fi
   # 문서 권장 설정: Cold boot, RAM 4GB, Graphics Hardware
   CFG_INI="$AVD_DIR/config.ini"
@@ -285,7 +294,8 @@ else
     set_ini "$CFG_INI" hw.gpu.enabled yes
     set_ini "$CFG_INI" hw.gpu.mode host
     set_ini "$CFG_INI" hw.keyboard yes
-    ok "AVD 설정 적용: RAM ${AVD_RAM_MB}MB, Cold boot, GPU host"
+    set_ini "$CFG_INI" hw.initialOrientation landscape
+    ok "AVD 설정 적용: $(sed -n 's/^hw\.lcd\.width=//p' "$CFG_INI")x$(sed -n 's/^hw\.lcd\.height=//p' "$CFG_INI") 가로, RAM ${AVD_RAM_MB}MB, Cold boot, GPU host"
   else
     warn "config.ini 를 찾지 못했습니다: $CFG_INI"
   fi
