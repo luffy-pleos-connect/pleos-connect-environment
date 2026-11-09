@@ -58,7 +58,7 @@ cd pleos-connect-environment
 - Maven: `https://nexus-playground.pleos.ai/repository/maven-releases/`
 - 의존성: `ai.pleos.playground:Vehicle:2.3.2`
 - 권한: `pleos.car.permission.CAR_DOORS`
-- AGP 8.10.1 / Kotlin 2.1.21 / Gradle 8.14.3 (wrapper 포함)
+- AGP 9.5.1 (Kotlin 내장) / Gradle 9.9.0 (wrapper 포함) — Android Studio 2026.2 내장 JDK 25 와 JDK 17 모두에서 빌드됨
 
 ```bash
 ./scripts/emulator.sh --install
@@ -71,7 +71,7 @@ cd pleos-connect-environment
 
 - `./scripts/doctor.sh` 로 어떤 항목이 빠졌는지 먼저 확인하세요.
 - Android Studio 첫 실행 마법사에서 SDK 경로를 `~/Library/Android/sdk` (setup 에서 고른 경로) 로 지정하세요.
-- 샘플 빌드가 JDK 문제로 실패하면 Studio 의 *Settings > Build Tools > Gradle > Gradle JDK* 를 17 로 지정하세요.
+- Studio 에 실행 버튼(app 구성)이 안 보이면 Gradle sync 가 실패한 것입니다. *File > Sync Project with Gradle Files* 후 Build 창의 오류를 확인하세요. Gradle JDK 는 *Settings > Build Tools > Gradle > Gradle JDK* 에서 바꿀 수 있습니다 (17 이상).
 - 예전 Pleos 이미지가 있으면 setup 이 자동으로 삭제 후 재설치합니다.
 - 에뮬레이터 로그: `.setup-logs/emulator.log`
 - 에뮬레이터 문제: [Emulator troubleshooting](https://developer.android.com/studio/run/emulator-troubleshooting?hl=ko), [Known issues](https://developer.android.com/studio/known-issues?hl=ko)
