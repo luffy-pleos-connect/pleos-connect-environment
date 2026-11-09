@@ -14,6 +14,12 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
+            <!-- Distraction Optimized: 주행 중에도 화면을 표시합니다 (선언하지 않으면 주행 중 시스템이 차단).
+                 선언한 앱은 CarUxRestrictions 를 직접 확인해 제한을 적용해야 합니다 (MainActivity 참고).
+                 https://document.pleos.ai/docs/pleos-only/vehicle-app-developer-guide/driving-restriction-development-guide -->
+            <meta-data
+                android:name="distractionOptimized"
+                android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

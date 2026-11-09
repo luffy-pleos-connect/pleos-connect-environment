@@ -15,6 +15,9 @@ android {
         versionName = "1.0"
     }
 
+    // AAOS Car API (CarUxRestrictionsManager). 차량에서 런타임에 제공됩니다.
+    useLibrary("android.car")
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
